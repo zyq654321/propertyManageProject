@@ -1,0 +1,13 @@
+NO_USER=用户名{0}不存在，请重新输入或者注册
+USER_PASSWORD_UNMATCH=用户名和密码不匹配，请重新输入
+NO_ROLE=该用户没有任何物业小区权限
+REQUEST_SAVED=报修请求保存成功，报修请求单号{0}
+SEARCH_NO_DATA=没有符合检索条件的数据
+SEARCH_MULTI_RESULT==符合检索条件的结果不唯一，请重新输入检索条件
+ASIGN_OK=工单{0}已经派发给{1}
+HOUSE_INFO_SAVED=业主信息保存成功
+ADD_PEOPLE_SAVED=新增居住人{0}保存成功
+DEL_PEOPLE_SAVED=居住人{0}删除成功
+UDP_PEOPLE_SAVED=居住人{0}更新成功
+#logging.file.name=C:\\temp\\propertymanagelog.txt
+#logging.level.hlwl=info

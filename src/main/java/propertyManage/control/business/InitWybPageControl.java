@@ -1,0 +1,56 @@
+package propertyManage.control.business;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import propertyManage.com.constant.PropertyConstant;
+import propertyManage.com.util.StringUtil;
+import propertyManage.db.bean.HouseAddrTypeBean;
+import propertyManage.db.bean.HumanResourceBean;
+import propertyManage.db.bean.PropertyCommunityBean;
+
+@Controller
+public class InitWybPageControl {
+
+//	@Autowired
+//	private HumanResourceRepository humanResourceRepository;
+
+	 @RequestMapping(value = {"/initWybPage"},method = RequestMethod.POST)
+	 @ResponseBody
+	public Map<String,Object> initWybPage(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+		StringUtil.consoleLog("initWybPage!!!2");
+		Map<String,Object> resultMap=new HashMap<String,Object>();
+		
+		resultMap.put(PropertyConstant.RESULT, PropertyConstant.RESULT_KBN.NG.getValue());
+		//System.out.println(request.getSession().getAttribute("UserInfo"));
+		//System.out.println(" RequestControl Map!!!"+((Map)data).get("OK"));
+			if(request.getSession(false)!=null){  
+				HumanResourceBean humanResourceBean= (HumanResourceBean)request.getSession().getAttribute(PropertyConstant.USER_INFO);
+				resultMap.put("Operator", humanResourceBean.getSysName());
+				PropertyCommunityBean propertyCommunityBean= (PropertyCommunityBean)request.getSession().getAttribute(PropertyConstant.PROPERTY_INFO);
+				//session.setAttribute(PropertyConstant.PROPERTY_INFO, propertyCommunityBean);
+				resultMap.put("ProjectName", propertyCommunityBean.getShortedName());
+				
+				resultMap.put(PropertyConstant.RESULT, PropertyConstant.RESULT_KBN.OK.getValue());
+				resultMap.put(PropertyConstant.HOUSE_ADDR_TYPE_COUNT, request.getSession().getAttribute(PropertyConstant.HOUSE_ADDR_TYPE_COUNT));
+				
+				List<HouseAddrTypeBean> houseAddrTypeBeanList =(List<HouseAddrTypeBean>)request.getSession().getAttribute(PropertyConstant.HOUSE_ADDR_TYPE);
+				resultMap.put(PropertyConstant.HOUSE_ADDR_TYPE, houseAddrTypeBeanList);
+
+			}
+			
+			return resultMap;
+	
+	}
+
+}

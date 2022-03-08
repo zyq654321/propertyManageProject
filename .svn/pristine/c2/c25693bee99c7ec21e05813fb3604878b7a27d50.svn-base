@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="./css/wybCommon.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+
+<script src="./js/jquery-3.6.0.min.js"></script>
+<script src="./js/jquery-ui.js"></script>
+<script src="./js/Common.js"></script>
+<title>报修请求检索及处理</title>
+<style type="text/css">
+<!--
+
+
+
+-->
+</style>
+<script type="text/javascript">
+
+
+var addressUnitSet;
+var addrShowFlg;
+var addrType;
+var selectedTr;
+var selectedTrRgb;
+var os = function (){
+	var ua = navigator.userAgent,
+	isWindowsPhone = /(?:Windows Phone)/.test(ua),
+	isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+	isAndroid = /(?:Android)/.test(ua),
+	isWeixin = /(?:MicroMessenger)/.test(ua),
+	isFireFox = /(?:Firefox)/.test(ua),
+	isChrome = /(?:Chrome|CriOS)/.test(ua),
+	isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+	isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+	isPc = !isPhone && !isAndroid && !isSymbian;
+	return {
+	    isTablet: isTablet,
+	    isPhone: isPhone,
+	    isWeixin:isWeixin,
+	    isAndroid: isAndroid,
+	    isPc: isPc
+	};	
+}();
+
+if (os.isAndroid || os.isPhone || os.isWeixin) { 
+
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPhoneScreen.css">');
+
+    
+    
+} else if (os.isTablet) {
+
+	// 平板
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPadScreen.css">');
+} else if (os.isPc) {
+
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPcScreen.css">');
+}
+
+	
+	$(document).ready(function() {
+		
+		//init();
+		$("#footer").load("foot.html");
+		
+		init();
+		
+		$("#searchResultTbl").on("click","tr",function() {
+			
+			if ($(this).find("td").length>0) {
+				if (selectedTr !=null && selectedTr.length > 0) {
+					selectedTr.css("background",selectedTrRgb);
+									
+				}
+				selectedTr =$(this).find("td");
+				selectedTrRgb=selectedTr.css('background-color');
+				selectedTr.css("background","#8ee6ff");
+				$("#selectedRequestId").val($(this).find("td label").html());
+				$("#asignmentRequestId").val($(this).find("td label").html());
+				showDetail();
+				//$("#requestDetail").dialog( "open" );
+		
+			}
+		
+		});
+		$("#assignmentBtn").click(function() {
+			$("#requestDetailDlg").dialog( "close" );
+			
+			if ($("#asignmentDlg select option").length ==0) {
+				initAsignOption();
+			}
+			$("#asignmentDlg").dialog( "open" );
+			
+			
+		});
+		$("#modifyBtn").click(function() {
+			$("#requestDetailDlg").dialog( "close" );
+			window.location.href="requestEdit.html?requestId="+$("#detailRequestId").html();
+		});
+		function initAsignOption() {
+			$.ajax({
+				type : "POST",
+				url : "/searchStaff",
+				contentType : "application/json",
+				async : false,
+				success : function(data) {
+					
+					
+					for(var i=0;i<data.SEARCH_RESULT.length;i++) {
+						$("#asignmentSlt").append(new Option(data.SEARCH_RESULT[i].realName, data.SEARCH_RESULT[i].humanResourceId));
+					}
+					
+				}
+			})
+		}
+		function showDetail() {
+			
+			
+			$("#requestDetailDlg").dialog( "open" );
+			
+			var jsonData={
+					
+	
+					"RequesterID":$("#selectedRequestId").val(),
+					"ShowDetailFlg":1
+					
+
+			};
+			$.ajax({
+				type : "POST",
+				url : "/searchRequest",
+				data: JSON.stringify(jsonData),
+				contentType : "application/json",
+				async : false,
+				success : function(data) {
+					
+						
+						$("#detailRequestId").html(data.SEARCH_RESULT[0]["requestID"]);
+						$("#detailRequestName").html(data.SEARCH_RESULT[0]["requesterName"]);
+						$("#detailRequestDate").html(data.SEARCH_RESULT[0]["requestDateTimeStr"]);
+						$("#detailRequestStatus").html(data.SEARCH_RESULT[0]["requestCurrentStatusStr"]);
+						$("#detailRequestCall").html(data.SEARCH_RESULT[0]["requesterCall"]);
+						$("#detailRequestDetail").html(data.SEARCH_RESULT[0]["requestDesc"]);
+						$("#detailRequestAddr").html(data.SEARCH_RESULT[0]["requestAddress"]);
+						$("#detailEstimatedRequestFee").html(data.SEARCH_RESULT[0]["estimatedRequestFee"]);
+						$("#detailRequestPrivatePublic").html(data.SEARCH_RESULT[0]["requestPrivatePublicStr"]);
+						$("#detailRequestType").html(data.SEARCH_RESULT[0]["requestTypeName"]);
+						$("#detailAsignTime").html(data.SEARCH_RESULT[0]["asignTime"]);
+						$("#detailAsignerName").html(data.SEARCH_RESULT[0]["asignerName"]);
+						$("#detailAsignedWorkerCall").html(data.SEARCH_RESULT[0]["asignedWorkerCall"]);
+						$("#detailAsignedWorkerName").html(data.SEARCH_RESULT[0]["asignedWorkerName"]);
+						
+					}
+			
+				})
+			};
+		
+		
+		
+	
+		$("#search").click(function() {
+			
+			var jsonData={
+					
+					"beginDate" : $("#datepickerFrom").val(),
+					"endDate" : $("#datepickerTo").val(),
+					"RequesterCall" : $("#RequesterCall").val(),
+					"RequestStatus" : $("#RequestStatus").val(),
+					"RequestPrivatePublic" : $("#RequestPrivatePublic").val(),
+					"RequestType" : $("#RequestType").val(),
+					"RequesterID": $("#RequesterID").val(),
+					"ShowDetailFlg":0
+					
+
+			};
+			$.ajax({
+				type : "POST",
+				url : "/searchRequest",
+				data: JSON.stringify(jsonData),
+				contentType : "application/json",
+				async : false,
+				success : function(data) {
+					
+					if ("NG" ==data.Result) {
+						$("#alertDlg p").html(data.MsgContext);
+						$("#alertDlg").dialog( "open" );
+					}else {
+						
+						addTableRow(data.SEARCH_RESULT);
+						$(".searchResultDiv").show();
+					}
+
+				}
+			})
+			
+		})
+	})
+	function addTableRow(data) {
+		$(".searchResultDiv").find(".lineTrCls").remove();
+		for(var i=0;i<data.length;i++) {
+			$(".searchResultDiv").find("tr")
+			.last()
+			.after("<tr class=\"lineTrCls\">" +
+					"<td><label class=\"labelCls\" id=\"requestIDDetail\">"+data[i]["requestID"]+"</label></td>"+
+					"<td><label class=\"labelCls\">"+data[i]["requestDateTimeStr"]+"</label></td>"+
+					"<td><label class=\"labelCls\">"+data[i]["requesterName"]+"</label></td>" +
+					"<td><label class=\"labelCls\">"+data[i]["requestCurrentStatusStr"]+"</label></td>"  +
+					"</tr> ");
+			
+		}
+	}
+	
+	function inputcheck() {
+		
+		
+		
+		
+	}
+	
+	  
+
+			
+		function init() {
+			$(".searchResultDiv").hide();
+			
+			$( "#datepickerFrom" ).datepicker({
+				  dateFormat: 'yy/mm/dd'
+				 
+			
+			});
+			$("#datepickerFrom").datepicker("setDate", (new Date()));
+		
+			$( "#datepickerTo" ).datepicker({
+				  dateFormat: 'yy/mm/dd'
+				
+			
+			});
+			$("#datepickerTo").datepicker("setDate", (new Date()));
+	
+			$("#requestDetailDlg").dialog({
+				autoOpen : false,
+				
+				width :"35em",
+			
+				show : "scale",
+				modal : true
+				
+
+			});
+			$("#asignmentDlg").dialog({
+				autoOpen : false,
+				
+				width :"11em",
+			
+				show : "scale",
+				modal : true,
+				buttons : {
+					 "确定": function() {
+							$(this).dialog("close");
+							
+							var jsonData={
+									
+									"AsignedWorkerName" : $("#asignmentSlt").find("option:selected").text(),
+									"WorkerHrId" : $("#asignmentSlt").val(),							
+									"RequestId" :$("#detailRequestId").html(),
+									"RequestWorkId" : $("#requestWorkIdHdn").val()
+									
+										
+							};
+							
+							$.ajax({
+								type : "POST",
+								url : "/asignmentRequest",
+								data: JSON.stringify(jsonData),
+								contentType : "application/json",
+								async : false,
+								success : function(data) {
+									
+									if ("NG" ==data.Result) {
+										$("#alertDlg p").html(data.MsgContext);
+										$("#alertDlg").dialog( "open" );
+									}else {
+										
+										$("#alertDlg p").html(data.MsgContext);
+										$("#alertDlg").dialog( "open" );
+									}
+
+								}
+							})
+							
+						},
+					 "取消": function() {
+						$(this).dialog("close");
+					}
+				}
+
+			});
+			
+	
+		$.ajax({
+			type : "POST",
+			url : "/initWybPage",
+			contentType : "application/json",
+			async : false,
+			success : function(data) {
+				
+				$("#operator").html(data.Operator);
+				$("#projectName").html(data.ProjectName);
+				
+				
+				//setAddrTr(addressUnitSet[2]);
+				//$(".addrTr").show();
+			}
+		})
+		
+	}
+	
+		
+	
+</script>
+</head>
+
+<body>
+<div id="menuContainer"></div>
+	<script>
+		$("#menuContainer").load("menu.html"); 
+	</script>
+	<div class="container">
+		<form id="myForm" name="myForm">
+
+
+
+			<div class="inputArea pageComment">物业宝报修请求检索及处理</div>
+
+
+			<div class="inputArea">
+				<table >
+					<tr>
+						<td><div class="labelTdcls">报修请求日：</div></td>
+						<td class="textTdcls" align="left">
+						
+						<input type="text" id="datepickerFrom"> 日起
+						<input type="text" id="datepickerTo"> 日止
+						 
+						</td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">联系电话：</div></td>
+						<td class="textTdcls" align="left"><input type="text"  class="shortInput" id="RequesterCall" 
+							 name="RequesterCall" maxlength=11 value="13918201981" /> </td>
+
+					</tr>
+					
+					<tr class="addrTr">
+						<td><div class="labelTdcls">报修状态：</div></td>
+						<td class="textTdcls" align="left">
+						  <select  id="RequestStatus">
+						  	<option value="99">全部</option>
+						    <option value="1">未派单</option>
+						    <option value="2">未完工 </option>
+						    <option value="3">未付款 </option>
+						    <option value="4">未关闭 </option>
+						    
+						  </select>
+						</td>
+
+					</tr>
+					<tr>
+					<td><div class="labelTdcls">报修类型：</div></td>
+						<td class="textTdcls" align="left">
+						  <select  id="RequestType">
+						  	<option value="99">全部</option>
+						    <option value="0">水管,下水道等</option>
+						    <option value="1">电路,电器等</option>
+						    <option value="2">墙体,门窗,地板,天花板等</option>
+						    <option value="3">通信,有线,网络设备等</option>
+						    <option value="4">楼道,路面,停车场设施</option>
+						    <option value="5">其他</option>
+						  </select>
+						</td>
+
+					</tr>					
+					
+					
+					<tr>
+						<td><div class="labelTdcls">公私性质：</div></td>
+						<td class="textTdcls" align="left">
+						  <select  id="RequestPrivatePublic">
+						  	<option value="99">全部</option>
+						    <option value="0">公共部位</option>
+						    <option value="1">私有部位</option>
+						    
+						  </select>
+						</td>
+
+					</tr>
+					
+					<tr>
+						<td><div class="labelTdcls">工单号：</div></td>
+						<td class="textTdcls" align="left"><input type="text"  class="shortInput" id="RequesterID"  /> </td>
+
+					</tr>
+					
+					
+				</table>
+			</div>
+			<div class="buttonArea">
+				<table >
+
+					<tr>
+						<td align="center" colspan="2" class="singleButtonTdCls"><input type="button" class="btnCls" 
+							id="search" value="检索" /></td>
+						
+
+					</tr>
+
+				</table>
+			</div>
+			<div class="searchResultDiv">
+				<input type="hidden"  class="shortInput" id="selectedRequestId"  />
+				<table class="searchResultTblCls" id="searchResultTbl">
+					<tr class="trCls">
+						<th>工单号</th>
+						<th>报修日</th>
+						<th>报修人</th>
+						<th>进展状况</th>
+					
+					</tr>
+				</table>
+			</div>
+		</form>
+	<div id="msgDiv">	
+		
+
+<script>$("#msgDiv").load("comDialog.html");</script></div>
+	<div id="asignmentDlg" title="派单处理" >
+	<p>将工单<label id="asignmentRequestId"></label>指派给下面指定人员处理 </p>
+	 					<select  id="asignmentSlt" class="dialogSelectcls">
+						  	
+						   
+						</select>
+			
+	</div>
+	
+	<div id="requestDetailDlg" title="报修请求详情" >
+		<table class="searchResultTblCls" id="requestDetailTbl">
+					<tr>
+						<td><div class="labelTdcls">工单号：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestId"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">请求人姓名：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestName"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">请求人电话：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestCall"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">地址：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestAddr"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">请求状态：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestStatus"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">请求时间：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestDate"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">请求类型：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestType"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">请求事项：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestDetail"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">派单人：</div></td>
+						<td><div class="RightlabelTdcls" id="detailAsignerName"></div><input type="hidden" id="requestWorkIdHdn"></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">派单时间：</div></td>
+						<td><div class="RightlabelTdcls" id="detailAsignTime"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">施工人：</div></td>
+						<td><div class="RightlabelTdcls" id="detailAsignedWorkerName"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">施工人电话：</div></td>
+						<td><div class="RightlabelTdcls" id="detailAsignedWorkerCall"></div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">工程预算：</div></td>
+						<td><div class="RightlabelTdcls" id="detailEstimatedRequestFee">元</div></td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">工程性质：</div></td>
+						<td><div class="RightlabelTdcls" id="detailRequestPrivatePublic"></div></td>
+
+					</tr>
+					
+					
+		</table>
+		<div class="buttonArea"><input type="button" class="btnCls" 
+							id="modifyBtn" value="修改" /><input type="button" class="btnCls" 
+							id="assignmentBtn" value="派单" /><input type="button" class="btnCls" 
+							id="materialApplyBtn" value="材料申领" /><input type="button" class="btnCls" 
+								id="cancel" value="取消工单" /><input type="button" class="btnCls" 
+								id="close" value="关闭工单" /></div>																	
+	</div>
+	<div id="footer">	
+		</div>
+		<script>$("#footer").load("foot.html");</script>
+		</div>
+	
+	
+	
+
+
+	
+</body>
+</html>

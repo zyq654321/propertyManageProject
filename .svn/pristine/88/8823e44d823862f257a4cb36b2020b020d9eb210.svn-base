@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="./css/ydwy.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="./css/jquery-ui.css">
+ 
+
+<!--  link href="./css/jquery-confirm.css" rel="stylesheet" media="screen"-->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>钰鼎旺德福智慧生活服务平台登录页面</title>
+<style type="text/css">
+<!--
+.indexdiv {
+	width: 200px;
+	text-align: center;
+}
+
+.commentDiv {
+	width: 200px;
+}
+
+#LineDiv {
+	width: 1200px;
+	margin: 0 auto;
+}
+
+#headDiv {
+	width: 1130px;
+	height: 265px;
+	margin: 0 auto;
+	font-family: Kaiti;
+	position: relative;
+}
+
+#imageDiv {
+	position: absolute;
+	top: 5px;
+	width: 100%;
+	height: 263px;
+	z-index: 0;
+}
+
+#logoDiv {
+	position: absolute;
+	top: 15px;
+	left: 10px;
+	width: 70px;
+	height: 50px;
+	opacity: 1;
+	z-index: 1;
+}
+
+.headTitle {
+	position: absolute;
+	top: 30px;
+	width: 1200px;
+	height: 180px;
+	color: black;
+	font-size: 38px;
+	text-align: center;
+	z-index: 2;
+}
+-->
+</style>
+<script src="./js/jquery-3.6.0.min.js"></script>
+<script src="./js/jquery-ui.js"></script>
+<!-- script src="./js/jquery-confirm.js"></script> -->
+<script type="text/javascript">
+var os = function (){
+	var ua = navigator.userAgent,
+	isWindowsPhone = /(?:Windows Phone)/.test(ua),
+	isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+	isAndroid = /(?:Android)/.test(ua),
+	isWeixin = /(?:MicroMessenger)/.test(ua),
+	isFireFox = /(?:Firefox)/.test(ua),
+	isChrome = /(?:Chrome|CriOS)/.test(ua),
+	isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+	isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+	isPc = !isPhone && !isAndroid && !isSymbian;
+	return {
+	    isTablet: isTablet,
+	    isPhone: isPhone,
+	    isWeixin:isWeixin,
+	    isAndroid: isAndroid,
+	    isPc: isPc
+	};	
+}();
+
+
+
+		$(document).ready(function() {	
+			/*
+			$( "#alertDlg" ).dialog({resizable: true,
+				autoOpen: false,
+				width:'30em',
+			      model: true,
+
+			      buttons: {
+			        "确定": function() {
+			          $( this ).dialog( "close" );
+			        },
+			        "取消": function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }});*/
+		/*
+			$("#alertDlg").dialog({
+				autoOpen : false,
+				
+				width :"30em",
+				show : "scale",
+				modal : true,
+				buttons : {
+					 "确定": function() {
+						$(this).dialog("close");
+					}
+				}
+
+			});*/
+		
+			$("#loginBtn").click(function() {
+				
+					if (Inputcheck() == false) {
+						return;
+					}
+					var deviceId="3";
+					if (os.isAndroid || os.isPhone || os.isWeixin) { 
+					
+						deviceId="1";
+					    
+					    
+					} else if (os.isTablet) {
+						deviceId="2";
+						
+					} else if (os.isPc) {
+						deviceId="3";
+				
+					}
+					
+					var jsonData={
+							"DeviceId":deviceId,
+							"sysName" : $('#ydwyUser').val().trim(),
+							"password":$('#ydwyPassword').val().trim()							
+
+					};
+					
+
+				$.ajax({
+					type : "POST",
+					url : "/dummy",
+				
+					async : false,
+					success : function(data) {
+						
+						
+						if ("NG" ==data.Result) {
+							$("#alertDlg p").html(data.Msg);
+							$("#alertDlg").dialog( "open" );
+						}else {
+							 $.ajax({
+							type : "GET",
+							url : "/dummy"
+	                	}) 
+						}
+					
+						/*
+						$.alert("点击下方确认按钮刷新页面", "温馨提示","确定",function(){
+								alert("loginResult");
+								
+							});*/
+					
+						//alert(data["initMsg"]);
+						
+						//if (data["loginResult"]=="0") {
+							/*
+							$.alert({
+							    title: 'Alert!',
+							    content: 'Simple alert!',
+							    confirm: function(){
+							        $.alert('Confirmed!'); // shorthand.
+							    }
+							});*/
+							
+							//$("#alertDlg").open();
+							//$( "#alertDlg" ).open();
+							/*
+							$( "#alertDlg" ).dialog({
+								width:'30em',
+							      model: true,
+				
+							      buttons: {
+							        "确定": function() {
+							          $( this ).dialog( "close" );
+							        },
+							        "取消": function() {
+							          $( this ).dialog( "close" );
+							        }
+							      }});*/
+						//	$( "#alertDlg" ).dialog("open");
+						
+							/*
+							$.confirm({
+								boxWidth: '20%',
+								useBootstrap: false,
+						        title: '',
+						        icon: './image/2errorMsg.ico',
+						        content: data["initMsg"],
+						        type: 'blue',
+						        buttons: {
+						            ok: {
+						                text: '确认',
+						                btnClass: 'btn-primary',
+						                action: function() {
+						                	//doSave();
+						                	window.location.href="GetMapData";
+						                	/* $.ajax({
+												type : "POST",
+												url : "/GetMapData"
+						                	}) */
+						      //          }
+						     //       },
+						            /*
+						            cancel: {
+						                text: '取消',
+						                btnClass: 'btn-primary',
+						                action: function() {
+						                	return;
+						                }
+						            }*/
+						     //   }
+						   // });*/
+							
+							
+							//alert(data["initMsg"]);
+							//window.location.href="GetMapData.do";
+							/*
+							$.alert({
+								//boxWidth: '30%',
+								//useBootstrap: false,
+						       // icon: 'glyphicon glyphicon-question-sign',
+						       // type: 'blue',
+							    title: "温馨提示",
+							    content: data["initMsg"],
+							    confirm: function(){
+							    	alert("sdfsdfs");
+							    	//window.location.href="GetMapData.do";
+							    }
+							});*/
+						/*			
+						}else {
+							$.alert({
+								boxWidth : '30%',
+								useBootstrap : false,
+								icon : 'glyphicon glyphicon-question-sign',
+								type : 'blue',
+								title : '温馨提示',
+								content : data["initMsg"],
+							})
+							return;
+						}*/
+
+					}
+				})
+				
+			})
+		})
+	
+	function Inputcheck() {
+		
+			if ($("#ydwyUser").val().trim() == "") {
+				
+					$("#alertDlg p").html("请输入用户名！");
+			$("#alertDlg").dialog( "open" );
+				return false;
+
+			}else if ($("#ydwyPassword").val().trim() == "") {
+			
+				$("#alertDlg p").html("请输入密码");
+				$("#alertDlg").dialog( "open" );
+				return false;
+
+			}
+		
+	}
+	function clearForm() {
+
+		document.getElementById("ydwyUser").value = "";
+		document.getElementById("ydwyPassword").value = "";
+	}
+	
+</script>
+</head>
+<body>
+	<div id="container">
+		<div id="headDiv">
+			<div id="imageDiv">
+				<img style="width: 100%; height: 100%;" src="picture/shanghai.jpg" />
+			</div>
+			<div id="logoDiv">
+				<img style="width: 100%; height: 100%;" src="picture/HULIAN NETWORK.png"/>
+			</div>
+			<div class="headTitle">
+				<h>沪联物业宝服务平台</h>
+			</div>
+
+		</div>
+		<div id="LineDiv">
+			<hr width="1130px" />
+
+		</div>
+
+
+		<form id="myForm" name="myForm">
+
+
+
+			<div class="subdiv headdiv">沪联物业宝服务平台登录</div>
+
+			<div class="subdiv indexdiv">请输入用户名和密码</div>
+
+			<div class="subdiv indexdiv">
+				<table width="300px" border="0">
+					<tr>
+						<td width="70px" align="right">用户名：</td>
+						<td align="left"><input type="text" id="ydwyUser"
+							name="ydwyUser" style="width: 100px" /></td>
+
+					</tr>
+					<tr>
+						<td align="right">密码：</td>
+						<td align="left"><input type="password" id="ydwyPassword"
+							style="width: 100px" name="ydwyPassword" /></td>
+
+					</tr>
+					<tr>
+						<td width="70px" align="right"></td>
+						<td></td>
+
+					</tr>
+				</table>
+			</div>
+			<div class="subdiv indexdiv">
+				<table width="300px" border="0">
+
+					<tr>
+						<td align="center"><input type="button" class="btnCls"
+							id="loginBtn" value="登录" /></td>
+						<td align="left"><input type="button" class="btnCls"
+							id="clearBtn" value="注册" onclick="clearForm();" /></td>
+
+					</tr>
+
+				</table>
+			</div>
+			<div class="subdiv commentDiv">
+				<table width="400px" border="0">
+					<tr>
+						<td>操作说明：</td>
+
+
+					</tr>
+					<tr>
+						<td>1:用户名不区分大小写</td>
+
+					</tr>
+					<tr>
+						<td>2:密码区分大小写</td>
+
+					</tr>
+
+				</table>
+			</div>
+
+		</form>
+	</div>
+	<div id="msgDiv">	
+		</msgDiv>
+
+<script>$("#msgDiv").load("comDialog.html");</script>
+<div id="footer">	
+		</div>
+		<script>$("#footer").load("foot.html");</script>
+</body>
+</html>

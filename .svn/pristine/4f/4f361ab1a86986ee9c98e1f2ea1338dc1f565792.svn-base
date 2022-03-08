@@ -1,0 +1,204 @@
+@charset "UTF-8";
+
+
+body {
+	font-family: KaiTi;
+	margin: 0;
+	height:100%;
+	color:#474747;
+
+}
+hr {
+	margin-top: 3px;
+}
+.footer p{
+	margin-top: 1px;
+margin-bottom: 1px;
+	}
+
+
+.commontable td {
+	border: 1px solid;
+}
+
+input {
+
+	margin-top: 2px;
+	margin-left: 2px;
+	margin-bottom: 2px;
+	margin-right: 2px;
+}
+
+select {
+	font-family: KaiTi;
+	margin-top: 1px;
+	margin-left: 2px;
+	margin-bottom: 1px;
+}
+
+.container {
+	margin: 0 auto;
+}
+
+.commentDiv {
+	width: 800px;
+}
+
+div, textarea {
+	font-family: KaiTi;
+}
+
+#smallcontainer {
+	width: 530px;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.inputArea ,.buttonArea,.searchResultDiv{
+	position: relative;
+	padding-top: 3px;
+	margin: 0 auto;
+}
+.inputArea table{
+
+	background-color: #e1f7ff;
+	border-collapse: collapse;
+	border-width:0px;
+
+}
+.buttonArea{
+	border-width:0px;
+	background-color: #ffffff;
+
+}
+
+
+.inputArea td{
+	border: 1px solid;
+	border-color: grey;
+	border-collapse: separate;
+
+	border-radius: 3px;
+}
+.headdiv {
+	text-align: center;
+	width: 100%;
+}
+
+
+.buttondiv {
+	width: 350px;
+}
+
+.singlebuttondiv {
+	width: 100px;
+}
+
+.commentdiv {
+	width: 600px;
+}
+
+.trCls {
+	background-color: #EAF9FF;
+}
+
+.btnCls {
+	background-color: #C1EDFF;
+	
+	font-family: Kaiti;
+	cursor: pointer;
+	color:#474747;
+}
+
+
+.btnCls:hover {
+	border: 1px solid #4fcaff;
+	background: #6ad2ff;
+	font-weight: normal;
+	color: #ffffff;
+}
+
+.btnCls:focus {
+	border: 1px solid #cccccc;
+	background: #8eddff;
+	font-weight: normal;
+	color: #2b2b2b;
+}
+
+
+.btnCls2 {
+	background-color: #95DFFF;
+	font-size: 14px;
+	font-family: Kaiti;
+	cursor: pointer;
+	border-radius: 14px;
+}
+
+.col1 {
+	width: 130px;
+	BORDER-TOP: 0px;
+	BORDER-LEFT: 0px;
+	text-align: right;
+	font-size: 18px;
+	padding-right: 5px;
+}
+
+.resulttable {
+	border: 1px solid;
+	font-family: KaiTi;
+	border-bottom: 1px solid;
+	background-color: #C1EDFF;
+	border-collapse: collapse;
+	cellspacing: 0;
+	cellpadding: 0;
+}
+.buttonArea {
+	text-align:center;
+}
+.resulttable tr td {
+	border: 1px solid;
+	padding-left: 2px;
+}
+
+.resulttable tr:nth-child(odd) {
+	background-color: #C1EDFF;
+}
+
+.resulttable tr:nth-child(even) {
+	background-color: #EAF9FF;
+}
+
+.footer {
+	position: absolute;
+	text-align: center;
+}
+
+.headTitle {
+	position: absolute;
+	text-align: center;
+	z-index: 2;
+		color: black;
+	width: 100%;
+}
+.searchResultTblCls  {
+	border-width: 0px;
+	background-color: #e1f7ff;
+	border-collapse:collapse;
+}
+
+.searchResultTblCls tr td ,th{
+	border: 1px solid;
+	border-color: grey;
+	
+}
+.searchResultTblCls tr  ,th{
+	background:#a8e7ff;
+	
+}
+.searchResultTblCls tr:nth-child(even){    
+    background:#eefbff;
+}
+.searchResultTblCls  tr:nth-child(odd){     
+    background:#dff7ff;
+}
+

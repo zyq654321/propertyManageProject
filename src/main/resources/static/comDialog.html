@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript">
+
+
+
+$(document).ready(function() {
+
+	
+		$("#confirmDlg").dialog({
+			autoOpen : false,
+			width : "15em",
+			show : "scale",
+			modal : true,
+			autoOpen : false,
+		});
+		
+		$("#alertDlg").dialog({
+			autoOpen : false,
+			
+			width :"16em",
+			show : "scale",
+			modal : true,
+			buttons : {
+				 "确定": function() {
+					$(this).dialog("close");
+				}
+			}
+
+		});
+		
+		
+		
+
+	
+
+});
+</script>
+
+</head>
+<body>
+	<div id="confirmDlg" title="物业宝系统消息">
+		<p></p>
+	</div>
+	<div id="alertDlg" title="物业宝系统消息">
+		<p></p>
+	</div>
+	
+	
+	
+
+
+</body>
+</html>

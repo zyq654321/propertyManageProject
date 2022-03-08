@@ -1,0 +1,183 @@
+package propertyManage.db.bean;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
+
+@Table("human_community_role_mst")
+public class HumanCommunityRoleBean{
+    @Id 
+    /** 项目小区人员权限ID */
+    private Long communityRoleId;
+
+    /** 
+     * 项目小区人员权限ID的取得  
+     * @return Long 项目小区人员权限ID  
+     */  
+    public Long getCommunityRoleId() {
+        return communityRoleId;
+    }
+
+    /* 
+     *  项目小区人员权限ID的设值  
+     * @param Long communityRoleId  
+     */  
+    public void setCommunityRoleId(Long communityRoleId){
+        this.communityRoleId = communityRoleId;
+    }
+
+    /** 人员ID */
+    private Long humanResourceId;
+
+    /** 
+     * 人员ID的取得  
+     * @return Long 人员ID  
+     */  
+    public Long getHumanResourceId() {
+        return humanResourceId;
+    }
+
+    /* 
+     *  人员ID的设值  
+     * @param Long humanResourceId  
+     */  
+    public void setHumanResourceId(Long humanResourceId){
+        this.humanResourceId = humanResourceId;
+    }
+
+    /** 物业小区ID */
+    private Integer communityId;
+
+    /** 
+     * 物业小区ID的取得  
+     * @return Integer 物业小区ID  
+     */  
+    public Integer getCommunityId() {
+        return communityId;
+    }
+
+    /* 
+     *  物业小区ID的设值  
+     * @param Integer communityId  
+     */  
+    public void setCommunityId(Integer communityId){
+        this.communityId = communityId;
+    }
+
+    /** 物业经理 */
+    private Integer communityManager;
+
+    /** 
+     * 物业经理的取得  
+     * @return Integer 物业经理  
+     */  
+    public Integer getCommunityManager() {
+        return communityManager;
+    }
+
+    /* 
+     *  物业经理的设值  
+     * @param Integer communityManager  
+     */  
+    public void setCommunityManager(Integer communityManager){
+        this.communityManager = communityManager;
+    }
+
+    /**  */
+    private Integer financeManager;
+
+    /** 
+     * 的取得  
+     * @return Integer   
+     */  
+    public Integer getFinanceManager() {
+        return financeManager;
+    }
+
+    /* 
+     *  的设值  
+     * @param Integer financeManager  
+     */  
+    public void setFinanceManager(Integer financeManager){
+        this.financeManager = financeManager;
+    }
+
+    /** 保安经理 */
+    private Integer securityManager;
+
+    /** 
+     * 保安经理的取得  
+     * @return Integer 保安经理  
+     */  
+    public Integer getSecurityManager() {
+        return securityManager;
+    }
+
+    /* 
+     *  保安经理的设值  
+     * @param Integer securityManager  
+     */  
+    public void setSecurityManager(Integer securityManager){
+        this.securityManager = securityManager;
+    }
+
+    /** 保安 */
+    private Integer securityStaff;
+
+    /** 
+     * 保安的取得  
+     * @return Integer 保安  
+     */  
+    public Integer getSecurityStaff() {
+        return securityStaff;
+    }
+
+    /* 
+     *  保安的设值  
+     * @param Integer securityStaff  
+     */  
+    public void setSecurityStaff(Integer securityStaff){
+        this.securityStaff = securityStaff;
+    }
+
+    /** 保洁员 */
+    private Integer cleaner;
+
+    /** 
+     * 保洁员的取得  
+     * @return Integer 保洁员  
+     */  
+    public Integer getCleaner() {
+        return cleaner;
+    }
+
+    /* 
+     *  保洁员的设值  
+     * @param Integer cleaner  
+     */  
+    public void setCleaner(Integer cleaner){
+        this.cleaner = cleaner;
+    }
+
+    /** 维修人员 */
+    private Integer maintainer;
+
+    /** 
+     * 维修人员的取得  
+     * @return Integer 维修人员  
+     */  
+    public Integer getMaintainer() {
+        return maintainer;
+    }
+
+    /* 
+     *  维修人员的设值  
+     * @param Integer maintainer  
+     */  
+    public void setMaintainer(Integer maintainer){
+        this.maintainer = maintainer;
+    }
+
+}

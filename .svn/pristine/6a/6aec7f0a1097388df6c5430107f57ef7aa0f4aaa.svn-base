@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="./css/wybCommon.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+
+<script src="./js/jquery-3.6.0.min.js"></script>
+<script src="./js/jquery-ui.js"></script>
+<script src="./js/Common.js"></script>
+<title>报修请求登记</title>
+<style type="text/css">
+<!--
+
+
+
+-->
+</style>
+<script type="text/javascript">
+
+
+var addressUnitSet;
+var addrShowFlg;
+var addrType;
+var os = function (){
+	var ua = navigator.userAgent,
+	isWindowsPhone = /(?:Windows Phone)/.test(ua),
+	isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+	isAndroid = /(?:Android)/.test(ua),
+	isWeixin = /(?:MicroMessenger)/.test(ua),
+	isFireFox = /(?:Firefox)/.test(ua),
+	isChrome = /(?:Chrome|CriOS)/.test(ua),
+	isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+	isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+	isPc = !isPhone && !isAndroid && !isSymbian;
+	return {
+	    isTablet: isTablet,
+	    isPhone: isPhone,
+	    isWeixin:isWeixin,
+	    isAndroid: isAndroid,
+	    isPc: isPc
+	};	
+}();
+
+if (os.isAndroid || os.isPhone || os.isWeixin) { 
+
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPhoneScreen.css">');
+
+    
+    
+} else if (os.isTablet) {
+
+	// 平板
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPadScreen.css">');
+} else if (os.isPc) {
+
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPcScreen.css">');
+}
+
+	
+	$(document).ready(function() {
+		
+		
+		
+		
+		//init();
+		//$("#footer").load("foot.html");
+		
+		init();
+		
+		$("#addressTypeSelect").dialog({
+			autoOpen : false,
+			
+			width :"16em",
+			show : "scale",
+			modal : true,
+			buttons : {
+				 "确定": function() {
+					 addrType=$("input[name='addressType']:checked").val();
+					 setAddrTr(addressUnitSet[addrType]);
+					 $(".addrTr").show();
+					 $(this).dialog("close");
+				},
+				 "取消": function() {
+						$(this).dialog("close");
+					}
+			}
+
+		});
+		$("#newRequest").click(function() {
+			window.location.href="requestEdit.html";
+		})
+		
+		$("#save").click(function() {
+			if (inputcheck() == false) {
+				return;
+			}
+			var jsonData={
+					
+					"RequestId":$("#RequestId").html(),
+					"RequesterCall" : $("#RequesterCall").val(),
+					"RequesterName":$('#RequesterName').val().trim(),	
+					"EstimatedRequestFee" : $("#EstimatedRequestFee").val(),
+					"RequestType" : $("#RequestType").val(),
+					"RequestAddress" : getAddr(addressUnitSet,addrType),
+					"RequestPrivatePublic" : $("#RequestPrivatePublic").val(),
+					"RequestDesc" : $("#RequestDesc").val(),
+					"EstimatedRequestFee" : $("#EstimatedRequestFee").val(),
+					
+
+			};
+			$.ajax({
+				type : "POST",
+				url : "/saveRequest",
+				data: JSON.stringify(jsonData),
+				contentType : "application/json",
+				async : false,
+				success : function(data) {
+					
+					$("#alertDlg p").html(data.MsgContext);
+					$("#RequestId").html(data.requestId);
+					$("#alertDlg").dialog( "open" );
+					$("#requestIdTr").show();
+					
+
+				}
+			})
+		})
+	
+	
+	})
+
+
+	function inputcheck() {
+		
+		
+		if (!addrShowFlg) {
+			addrShowFlg=true;
+			
+			$(".addrTr").show();
+			$("#addressTypeSelect").dialog( "open" );
+			return false;
+			
+		}
+	
+		
+		var checkObjArray=[["#RequesterCall","联系电话"],["#RequesterName","姓名"],	["#RequestDesc","请求内容"]];
+	
+		
+		var checkTypeArray=[[[1],[2,11],[3]],
+				[[1]],[[1],[4,10]]];
+	
+		if (inputCheckCom(checkObjArray,checkTypeArray)==false) {
+			
+			return false;
+		}
+			
+	
+		
+		var estimatedRequestFee=$("#EstimatedRequestFee").val();
+		
+		if  (!isEmpty(estimatedRequestFee) && !isInteger(estimatedRequestFee)) {
+			$("#alertDlg p").html("预估费用必须为数字！");
+			$("#alertDlg").dialog("open");
+			return false;
+		}
+		if (checkAddr()==false) {
+			
+			return false;
+		}
+		
+	}
+	function checkAddr() {
+		
+		if ($("#addressUnit1").val().length==0 && $("#addressUnit2").length>0 && $("#addressUnit2").val().length > 0) {
+			$("#addressUnit1").focus();
+			$("#alertDlg p").html("请先输入地址1再输入地址2");
+			$("#alertDlg").dialog("open");
+			$("#addressUnit1").focus();
+			return false;
+		}
+		if ($("#addressUnit2").length > 0 && $("#addressUnit2").val().length==0 && $("#addressUnit3").length > 0 && $("#addressUnit3").val().length > 0) {
+			$("#addressUnit2").focus();
+			$("#alertDlg p").html("请先输入地址2再输入地址3");
+			$("#alertDlg").dialog("open");
+			$("#addressUnit1").focus();
+			return false;
+		}
+		if ($("#addressUnit3").length > 0 && $("#addressUnit3").val().length==0 && $("#addressUnit4").length > 0 && $("#addressUnit4").val().length > 0) {
+			$("#addressUnit3").focus();
+			$("#alertDlg p").html("请先输入地址3再输入地址4");
+			$("#alertDlg").dialog("open");
+			$("#addressUnit1").focus();
+			return false;
+		}
+		if (addressUnitSet[addrType].addressUnit1Name!=="任意") {
+			var checkAddrArray=[["#addressUnit1",addressUnitSet[addrType].addressUnit1Name]];
+			
+			var addrTypeArray=[[[1],[3]]]					
+		
+			if (inputCheckCom(checkAddrArray,addrTypeArray)==false) {
+				
+				return false;
+			}
+			if ($("#addressUnit2").length > 0 && addressUnitSet[addrType].addressUnit2Name.length>0) {
+				checkAddrArray=[["#addressUnit2",addressUnitSet[addrType].addressUnit2Name]];
+				if (inputCheckCom(checkAddrArray,addrTypeArray)==false) {
+					
+					return false;
+				}
+			}
+			if ($("#addressUnit3").length > 0 && addressUnitSet[addrType].addressUnit3Name.length>0) {
+				checkAddrArray=[["#addressUnit3",addressUnitSet[addrType].addressUnit3Name]];
+				if (inputCheckCom(checkAddrArray,addrTypeArray)==false) {
+					
+					return false;
+				}
+			}
+			if ($("#addressUnit4").length > 0 && addressUnitSet[addrType].addressUnit4Name.length>0) {
+				checkAddrArray=[["#addressUnit4",addressUnitSet[addrType].addressUnit4Name]];
+				if (inputCheckCom(checkAddrArray,addrTypeArray)==false) {
+					
+					return false;
+				}
+			}
+			
+		}else {
+			var checkAddrArray=[["#addressUnit1","地址"]];
+			
+			var addrTypeArray=[[[1]]]					
+		
+			if (inputCheckCom(checkAddrArray,addrTypeArray)==false) {
+				
+				return false;
+			}
+		}
+		return true;
+		
+	}
+	  
+
+			
+		function init() {
+		
+		
+		addrShowFlg=false;
+		
+		$("#requestIdTr").hide();
+		$.ajax({
+			type : "POST",
+			url : "/initWybPage",
+			contentType : "application/json",
+			async : false,
+			success : function(data) {
+				
+				$("#operator").html(data.Operator);
+				$("#projectName").html(data.ProjectName);
+				
+				addressUnitSet=data.HouseAddrType;
+				
+				if (addressUnitSet.length>1) {
+					$(".addrTr").hide();
+					var htmlText=""
+					for(var i=0;i<addressUnitSet.length;i++) {
+						
+						
+						var option="";
+						
+						if (!isEmpty(addressUnitSet[i].addressUnit1Name)) {
+							option=option+"***";
+							option=option+addressUnitSet[i].addressUnit1Name;
+							
+						}
+						if (!isEmpty(addressUnitSet[i].addressUnit2Name)) {
+							option=option+"***";
+							option=option+addressUnitSet[i].addressUnit2Name;
+						}
+						if (!isEmpty(addressUnitSet[i].addressUnit3Name)) {
+							option=option+"***";
+							option=option+addressUnitSet[i].addressUnit3Name;
+						}
+						if (!isEmpty(addressUnitSet[i].addressUnit4Name)) {
+							option=option+"***";
+							option=option+addressUnitSet[i].addressUnit4Name;
+						}
+						htmlText=htmlText+"<input name=\"addressType\"  type=\"radio\" value=\""+i+"\" /><label class=\"optionCLs\">"+option+"</label><br>";
+						
+						
+					}
+					
+					$("#addressTypeSelect").html(htmlText);
+					
+				}else {
+					addrType=0;
+					setAddrTr(addressUnitSet[0]);
+					addrShowFlg=true;
+					$(".addrTr").show();
+					
+				}
+				
+				
+				//setAddrTr(addressUnitSet[2]);
+				//$(".addrTr").show();
+			}
+		})
+		
+		var url=window.location.search;
+		var requestId;
+		if (url.indexOf("requestId=") > 0) {
+			requestId=url.substr(url.indexOf("requestId=")+10);
+		}
+		
+		if (requestId !=null && requestId.length>0) {
+			searchRequest(requestId);
+		}
+		
+		
+		
+	}
+	function searchRequest(requesterID) {
+		var jsonData={
+				
+				
+				"RequesterID": requesterID
+				
+
+		};
+		$.ajax({
+			type : "POST",
+			url : "/searchRequest",
+			data: JSON.stringify(jsonData),
+			contentType : "application/json",
+			async : false,
+			success : function(data) {
+				
+				if ("NG" ==data.Result) {
+					$("#alertDlg p").html(data.MsgContext);
+					$("#alertDlg").dialog( "open" );
+				}else {
+					$("#RequestId").html(data.SEARCH_RESULT[0]["requestID"]);
+					$("#RequesterCall").val(data.SEARCH_RESULT[0]["requesterCall"]);
+					$("#RequestType").val(data.SEARCH_RESULT[0]["requestType"]);
+					$("#RequesterName").val(data.SEARCH_RESULT[0]["requesterName"]);
+					$("#RequestPrivatePublic").val(data.SEARCH_RESULT[0]["requestPrivatePublic"]);
+					$("#EstimatedRequestFee").val(data.SEARCH_RESULT[0]["estimatedRequestFee"]);
+					$("#RequestDesc").html(data.SEARCH_RESULT[0]["requestDesc"]);
+					
+					$("#requestIdTr").show();
+				}
+
+			}
+		})
+	}
+	
+	
+	
+	
+</script>
+</head>
+
+<body>
+<div id="menuContainer"></div>
+	<script>
+		$("#menuContainer").load("menu.html"); 
+	</script>
+	<div class="container">
+		<form id="myForm" name="myForm">
+
+
+
+			<div class="inputArea pageComment">物业宝报修请求登记</div>
+
+
+			<div class="inputArea">
+				<table >
+					<tr id="requestIdTr">
+						<td><div class="labelTdcls">工单号:</div></td>
+						<td class="textTdcls" align="left"><div class="RightlabelTdcls" id="RequestId"></div> </td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">联系电话:</div></td>
+						<td class="textTdcls" align="left"><input type="text"  class="midInput" id="RequesterCall" 
+							 name="RequesterCall" maxlength=11 /><input type="button"  id="search" class="btnCls" value="检索"
+							 /> </td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">姓名:</div></td>
+						<td class="textTdcls" align="left"><input type="text" class="shortInput"  id="RequesterName" 
+							name="RequesterName" maxlength=16 value="姓名" /></td>
+
+					</tr>
+					
+					<tr class="addrTr">
+						<td><div class="labelTdcls">报修地址:</div></td>
+						<td class="textTdcls" id="addrTd" align="left"></td>
+
+					</tr>
+										
+					<tr>
+						<td><div class="labelTdcls">报修类型:</div></td>
+						<td class="textTdcls" align="left">
+						  <select  id="RequestType">
+						    <option value="0">水管,下水道等</option>
+						    <option value="1">电路,电器等</option>
+						    <option value="2">墙体,门窗,地板,天花板等</option>
+						    <option value="3">通信,有线,网络设备等</option>
+						    <option value="4">楼道,路面,停车场设施</option>
+						    <option value="5">其他</option>
+						  </select>
+						</td>
+
+					</tr>
+					
+					<tr>
+						<td><div class="labelTdcls">公私性质:</div></td>
+						<td class="textTdcls" align="left">
+						  <select  id="RequestPrivatePublic">
+						    <option value="0">公共部位</option>
+						    <option value="1">私有部位</option>
+						    
+						  </select>
+						</td>
+
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">预估费用:</div></td>
+						<td class="textTdcls" align="left"><input type="text" class="numberInput"  id="EstimatedRequestFee" 
+							 />元</td>
+
+					</tr>
+					
+					<tr>
+						<td><div class="labelTdcls">请求内容描述:</div></td>
+						<td class="textTdcls" align="left"><textarea  id="RequestDesc" 
+							cols ="130" rows = "15" >请求内容描述请求内容描述</textarea></td>
+
+					</tr>
+					
+				</table>
+			</div>
+			<div class="buttonArea">
+				<table >
+
+					<tr>
+						<td align="center" colsapan="2" class="singleButtonTdCls"><input type="button" class="btnCls" 
+							id="save" value="保存请求" /><input type="button" class="btnCls" 
+							id="newRequest" value="新增请求" /></td>
+						
+
+					</tr>
+
+				</table>
+			</div>
+			
+		
+
+		</form>
+	<div id="msgDiv">	
+		
+
+<script>$("#msgDiv").load("comDialog.html");</script></div>
+
+<div id="addressTypeSelect" title="请选择输入地址类型" >
+	
+	</div>
+	<div id="footer">	
+		</div>
+		<script>$("#footer").load("foot.html");</script>
+		</div>
+	
+	
+	
+
+
+	
+</body>
+</html>

@@ -1,0 +1,237 @@
+
+
+td, th {
+	padding-left: 2px;
+}
+
+select, option, input {
+	font-size: 5vw;
+}
+
+.titleDiv {
+	text-align: center;
+	font-size: 6vw;
+	line-height: 6vw;
+	margin-top: 1vh;
+}
+
+.colTitle {
+	width: 15vw;
+	text-align: right;
+	padding-right: 1vw;
+}
+
+	
+.col1 {
+	width: 230px;
+}
+
+.colValue {
+	padding-left: 1vw;
+	width: 55vw;
+}
+
+.commentDiv {
+	width: 80vw;
+}
+
+.btnCls {
+	width: 30vw;
+	background-color: #95DFFF;
+	font-size: 5vw;
+	border-radius: 4vw;
+}
+
+.smallBtn {
+	font-size: 3vw;
+	width: 10vw;
+	background-color: #95DFFF;
+	font-size: 3vw;
+	font-family: Kaiti;
+	border-radius: 3vw;
+}
+.inputArea,.buttonArea {
+	width:85vw;
+}
+
+.commentDiv {
+	font-size: 3vw;
+}
+#headDiv {
+	height:20vh;
+	width:98%;
+	
+}
+input[type="text"]  {
+	width:50vw;
+}
+input[type="password"]  {
+	width:50vw;
+}
+
+.labelTdcls {
+	width:35vw;
+	font-size: 5vw;
+	text-align: right;
+}
+.textTdcls {
+	font-size: 5vw;
+
+	
+}
+.buttonTdCls {
+	width:40vw;
+	
+}
+.pageComment{
+	font-size: 6vw;
+	text-align: center;
+}
+.helpComment {
+	font-size: 3vw;
+
+}
+.oneBtnDiv {
+	width: 20vw;
+}
+
+.table_width_1 {
+	width: 30vw;
+}
+
+.table_width_2 {
+	width: 60vw;
+}
+
+.table_width_3 {
+	width: 80vw;
+}
+
+.Btn3Div {
+	width: 80vw;
+	font-size: 3vw;
+}
+
+.Btn2Div {
+	width: 50vw;
+}
+
+.historysearchdiv {
+	width: 60vw;
+}
+
+.houseMstDiv {
+	width: 80vw;
+}
+
+.propertyFeeHisDiv {
+	width: 80vw;
+}
+
+.searchDiv {
+	width: 85vw;
+	font-size: 4vw;
+}
+
+.pleaseDiv {
+	width: 80vw;
+}
+
+.searchTable {
+	width: 85vw;
+}
+
+.selectdiv {
+	width: 80vw;
+	font-size: 4vw;
+}
+
+.btnBig {
+	
+}
+
+.Fullbtn {
+	width: 60vw;
+}
+
+.tableDiv {
+	margin: 4vw;
+	height: 42vw;
+	border-radius: 3vw;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.hisInput {
+	width: 18vw;
+}
+
+.col1 {
+	width: 20vw;
+	font-size: 3vw;
+}
+
+.col2 {
+	width: 20vw;
+	font-size: 3vw;
+}
+
+.HouseAddrcls {
+	width: 45vw;
+}
+
+.headTitle {
+	
+	top: 3vh;
+	
+	height: 3vh;
+	
+	font-size: 5vw;
+
+}
+	
+
+
+.ui-widget.ui-widget-content {
+    border: 1px solid #c5c5c5;
+}
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+    border-bottom-right-radius: 0.5em;
+}
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+    border-bottom-left-radius:0.5em;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    border-top-right-radius: 0.5em;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+    border-top-left-radius: 0.5em;
+}
+.ui-widget-content {
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #333333;
+}
+
+
+.ui-dialog {
+	 border-radius: 0.5em;
+}
+.ui-dialog button {
+	width: 6em;
+}
+
+.footer {
+	bottom: 2vh;
+	width: 100%;
+	height: 2vh;
+	font-size: 1vw;
+
+}
+#logoDiv {
+	top: 1vw;
+	left: 2vw;
+	width: 8vw;
+	height: 6vw;
+
+}

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+
+#headDiv {
+	height:55px;
+}
+#logoDiv {
+	float:left;
+	position: relative;
+	display: inline-block;
+}
+#loginInfo {
+	width: 185px;
+	height: 40px;
+	margin-top:20px;
+	padding-left:655px;
+	text-align:right;
+	
+	display: inline-block;
+}
+.clear {
+  clear: both;
+  }
+
+#comDiv {
+	float:left;
+	position: relative;
+	width: 200px;
+	padding-top:10px;
+	margin-left:10px;
+	height: 50px;
+	display: inline-block;
+	text-align:center;
+
+
+}
+
+ul {
+   padding-inline-start: 0px;
+}
+#hrefDiv {
+
+	position: relative;
+	width: 300px;
+	height: 30px;
+	top:38px;
+	padding-left:450px;
+	text-align:right;
+	
+	display: inline-block;
+
+}
+#hrefDiv a {
+cursor:pointer;
+}
+.menuDiv {
+	position: relative; 
+	top: 5px;
+	z-index: 99;
+	height: 30px;
+	border-radius: 3px;
+	background-color: #0983CD;
+}
+
+.lineCls {
+	position: relative;
+	margin-top: 6px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: grey;
+	height: 1px;
+	border: 0px;
+}
+
+ul {
+	list-style: none;
+	margin: 0px auto;
+	font-size: 18px;
+}
+
+.nav li {
+	width: 161px;
+	border-radius: 3px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	float: left;
+	background-color: #0983CD;
+	color: white;
+	position: relative;
+	font-size: 18px;
+	
+}
+
+.nav li ul {
+	position: absolute;
+	top: 25px;
+	display: none;
+	font-size: 18px;
+}
+
+.nav li ul li {
+	position: relative;
+}
+
+.nav li ul li ul {
+	top: 25px;
+	left: 125px;
+	display: none;
+	font-size: 18px;
+}
+-->
+</style>
+<script type="text/javascript">
+var addrTargetUrl;
+var addrType;
+var addressUnitSet;
+var needAllAddr=false;
+
+$(document).ready(function(){
+   	
+    	//$(function(){
+    		$('.nav .level1').eq(0).css('border-top-left-radius','3px');
+    		$('.nav .level1').eq(0).css('border-bottom-left-radius','3px');
+    		$('.nav .level1').eq(6).css('border-top-right-radius','3px');
+    		$('.nav .level1').eq(6).css('border-bottom-right-radius','3px');
+    		  $('.nav li').hover(function(){
+
+    			 $(this).css('background-color', '#006DDB');
+    			 $(this).css('cursor', 'pointer');
+    			 if ($(this).find('ul')) {
+    				 $(this).find('ul').css('display', 'block');
+    			 }
+    		     
+    		  }, function(){
+    			$(this).css('background-color', '#0983CD');
+    			if ($(this).find('ul')) {
+    				 $(this).find('ul').css('display', 'none');
+    			}
+    		   
+    		  });
+    		  
+      		  $('.nav li ul li').hover(function(){
+     			 $(this).css('background-color', '#006DDB');
+     		     $(this).find('ul').css('display', 'block');
+     		     $(this).find('ul').css('left', '120px');
+     		   	 $(this).find('ul').css('top', '0px');
+     		  }, function(){
+     			$(this).css('background-color', '#0983CD');
+     		    $(this).find('ul').css('display', 'none');
+     		  });
+    		  
+    		
+    		  $('.menuDiv').find("ul li").on('click',function() {
+    		     
+    		      var objectId= $(this).attr("id");
+    		      if (null==objectId) {
+    		    	  return;
+    		      }    	
+    		      if (objectId=="HouseAccountSearchLi") {
+    		    	  addrTargetUrl="houseInfoSearch.html";
+    		    	  needAllAddr=false;
+    		    	  $("#addrInputDlg").dialog( "open" );
+    		    	  
+    		      }else if (objectId=="HouseAccountEditLi") {
+    		    	  addrTargetUrl="houseInfoEdit.html";
+    		    	  needAllAddr=false;
+    		    	  $("#addrInputDlg").dialog( "open" );
+    		      }else if (objectId=="HouseLivePeopleLi") {
+    		    	  addrTargetUrl="houseLivePeople.html";
+    		    	  needAllAddr=true;
+    		    	  $("#addrInputDlg").dialog( "open" );
+    		    
+       		      	  
+    		    
+       		      }else if (objectId=="resSysLi") {
+    		    	  location.href='resSystem.html';
+    		      }else if (objectId=="homeSiteLi") {
+    		    	  location.href='index.html';
+    		      }else if (objectId=="HumanHireLi") {
+    		    	  location.href='humanHire.html';
+    		      }else if (objectId=="CooperationLi") {
+    		    	 
+    		    	  location.href='collaboration.html';
+    		      }else if (objectId=="IdeaLi") {
+    		    	  
+    		    	  
+    		    	  location.href='Idea.html';
+    		      }else if (objectId=="RequestSearchLi") {
+   		        
+    		    	  location.href='requestSearch.html';
+    		      }else if (objectId=="RequestEditLi") {
+      		        
+    		    	  location.href='requestEdit.html';
+    		      }else if (objectId=="NewStaffLi") {
+    		    	  location.href='addNewEmployee.html';
+    		   
+    		      }else if (objectId=="StaffHandleLi") {
+    		    	  location.href='employeeResponsibility.html';
+    		    	
+    		    	 
+    		      }else if (objectId=="propertySysLi") {
+     		    	
+      		        
+    		    	  location.href='propertySystem.html';
+    		      }
+    		   
+    		  
+    		});
+   			$("#addrInputDlg").dialog({
+   				autoOpen : false,
+   				
+   				width :"30em",
+   				show : "scale",
+   				modal : true
+
+   			});
+   			$("#searchAddr").click(function() {
+   				
+   				search();
+   			});
+   				
+   			 	
+   			 function search() {
+   				
+   				
+   				var jsonData={
+   						
+
+   						"AddressTypeID" : addrType,
+   						"AddrClass1Info" : getAddrInfo("addressUnit1"),
+   						"AddrClass2Info" : getAddrInfo("addressUnit2"),
+   						"AddrClass3Info" : getAddrInfo("addressUnit3"),
+   						"AddrClass4Info" : getAddrInfo("addressUnit4")
+   						
+   						
+
+   				};
+   				$.ajax({
+   					type : "POST",
+   					url : "/searchHouseAccount",
+   					data: JSON.stringify(jsonData),
+   					contentType : "application/json",
+   					async : false,
+   					success : function(data) {
+   						if ("NG" ==data.Result) {
+   							$("#alertDlg p").html(data.MsgContext);
+   							$("#alertDlg").dialog( "open" );
+   						}else {
+   						
+   						var url=addrTargetUrl+"?houseAccountId="+data.SEARCH_RESULT[0]["houseAccountId"];
+   						if (needAllAddr) {
+   							url=url+"?allAddr="+data.SEARCH_RESULT[0]["allAddr"];
+   						}
+   							location.href=url;
+   							
+   							$("#addrInputDiv").dialog( "close" );
+   						}
+   					}
+   				})
+   				
+   			}
+   			
+   		
+   			$("#AddrInputTypeSlc").change(function(){
+   				addrType=$("#AddrInputTypeSlc").val();
+   				var typeindex=$('#AddrInputTypeSlc').prop('selectedIndex');
+   				setAddrTr(addressUnitSet[typeindex]);
+   			});
+    		init();
+   			function init() {
+   				
+   				$("#addrInputDlg").dialog({
+   					autoOpen : false,
+   					
+   					width :"30em",
+   					show : "scale",
+   					modal : true
+
+   				});
+   			
+   				initAddrInputAndLogin(addressUnitSet);
+   				
+
+   			}
+   			
+   			function setAddrTr(data) {
+   				var htmlText = "";
+
+   				if (data.addressUnit1Name == "任意") {
+   					htmlText = htmlText + "<input type=\"text\" class=\"longInput\"  id=\"addressUnit1\"   />";
+
+   				} else {
+   					htmlText = htmlText + "<input type=\"text\" class=\"numberInput\"  id=\"addressUnit1\"   />";
+   					htmlText = htmlText + data.addressUnit1Name;
+   				}
+
+   				if (!isEmpty(data.addressUnit2Name)) {
+   					htmlText = htmlText + "<input type=\"text\" class=\"numberInput\"  id=\"addressUnit2\"   />";
+   					htmlText = htmlText + data.addressUnit2Name;
+   				}
+   				if (!isEmpty(data.addressUnit3Name)) {
+   					htmlText = htmlText + "<input type=\"text\" class=\"numberInput\"  id=\"addressUnit3\"   />";
+   					htmlText = htmlText + data.addressUnit3Name;
+   				}
+   				if (!isEmpty(data.addressUnit4Name)) {
+   					htmlText = htmlText + "<input type=\"text\" class=\"numberInput\"  id=\"addressUnit4\"   />";
+   					htmlText = htmlText + data.addressUnit4Name;
+   				}
+   			
+   				$("#addrInputTd").html(htmlText);
+   				
+   			}
+   			
+
+   			function initAddrInputAndLogin(addressUnitSet) {
+   				$.ajax({
+   					type: "POST",
+   					url: "/initWybPage",
+   					contentType: "application/json",
+   					async: false,
+   					success: function(data) {
+   			
+   						$("#operator").html(data.Operator);
+   						$("#projectName").html(data.ProjectName);
+   			
+   						addressUnitSet = data.HouseAddrType;
+   			
+   						if (addressUnitSet.length > 1) {
+   			
+   							var htmlText = ""
+   							for (var i = 0; i < addressUnitSet.length; i++) {
+   			
+   			
+   								var option = "";
+   			
+   								if (!isEmpty(addressUnitSet[i].addressUnit1Name)) {
+   									option = option + "***";
+   									option = option + addressUnitSet[i].addressUnit1Name;
+   			
+   								}
+   								if (!isEmpty(addressUnitSet[i].addressUnit2Name)) {
+   									option = option + "***";
+   									option = option + addressUnitSet[i].addressUnit2Name;
+   								}
+   								if (!isEmpty(addressUnitSet[i].addressUnit3Name)) {
+   									option = option + "***";
+   									option = option + addressUnitSet[i].addressUnit3Name;
+   								}
+   								if (!isEmpty(addressUnitSet[i].addressUnit4Name)) {
+   									option = option + "***";
+   									option = option + addressUnitSet[i].addressUnit4Name;
+   								}
+   								$("#AddrInputTypeSlc").append(new Option(option, addressUnitSet[i].addressTypeId));
+   			
+   			
+   							}
+   			
+   							addrType = $("#AddrInputTypeSlc").val();
+   			
+   							setAddrTr(addressUnitSet[0]);
+   			
+   						} else {
+   			
+   							setAddrTr(addressUnitSet[0]);
+   							$("#addrTypeTr").hide();
+   			
+   						}
+
+   			
+   					
+   					}
+   				})
+   			
+   			}
+
+    		 
+   
+});
+    	
+function SetHome(obj,url){
+	
+
+	try{
+		obj.style.behavior='url(#default#homepage)';
+		obj.setHomePage(url);
+	}catch(e){
+		;
+	}
+}
+
+//收藏本站
+function AddFavorite(url,title) {
+	
+
+	window.external.AddFavorite(url, title);
+
+}
+
+</script>
+</head>
+<body>
+
+
+	<div class="container">
+		<input type="hidden" name="selectedMenu" id="selectedMenu" value="" />
+		<div id="headDiv">
+			<div id="logoDiv"><img style="width:70px; height:100%;"
+					src="./picture/HULIAN NETWORK.png" /></div >
+					
+			<div id="comDiv"><img style="width:100%; height:100%;"
+					src="./picture/companyName.jpg" /></div>
+			<div id="loginInfo">
+			<div >
+				<div class="menuLblCls" style="text-align:right;">项目名称:</div> <div id="projectName"  class="menuTxtCls" style="text-align:left;"></div>
+				<div style="clear:both"></div>
+			</div>
+			<div >
+				<div class="menuLblCls" style="text-align:right;">操作员:</div> 
+				<div id="operator"  class="menuTxtCls" style="text-align:left;"></div>
+				<div style="clear:both"></div>
+			</div>
+			</div>		
+
+		</div>
+		<div class="clear"></div>
+		<div class="menuDiv">
+			<ul class="nav">
+				<li>物业项目管理
+					<ul>
+						<li id="PropertyInfoSearchLi">项目信息查询</li>
+					<li id="PropertyInfoEditLi">项目信息变更</li>
+					</ul>
+				</li>
+			<li>业主信息管理
+					<ul>
+						<li id="HouseAccountSearchLi">业主信息查询</li>
+						<li id="HouseAccountEditLi">业主信息变更</li>
+						<li id="HouseLivePeopleLi">住所居民管理</li>
+						
+					</ul>
+				</li>
+				<li>报修管理
+					<ul>
+						<li id="RequestSearchLi">报修检索及处理</li>
+						<li id="RequestEditLi">报修登记</li>
+					</ul>
+				</li>
+				
+				<li id="PayPropertyFeeLi">物业缴费
+					<ul>
+						<li id="PayHistorySeachLi">缴费登记</li>
+						<li id="PayHistorySeachLi">缴费记录检索</li>
+						<li id="reminderFeeyLi">物业费催缴</li>
+					</ul>
+				</li>
+					<li>活动与投票
+					<ul>
+						<li id="NewVoteLi">投票表决策划</li>
+						<li id="VoteResultLi">投票结果查询</li>
+						<li id="EventAndAnnounceLi">活动通知</li>
+						<li id="SignupResultLi">活动报名结果</li>
+					</ul>
+				</li>
+					
+				<li id="ExcelChartLi">统计数据
+					<ul>
+						<li id="PropertyFeeSummaryLi">物业费收缴明细</li>
+						<li id="PropertyFeeRateLi">缴费率统计</li>
+						<li id="ExcelChartLi">报修统计</li>
+					</ul>
+				</li>
+				<li>员工管理
+					<ul>
+						<li id="StaffHandleLi">员工权限设置</li>
+						<li id="NewStaffLi">员工登记</li>
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+		<div id="addrInputDlg" title="物业宝地址输入" class="inputArea">
+			<p></p>
+			<table>
+					<tr id="addrTypeTr">
+						<td><div class="labelTdcls">地址类型:</div></td>
+						<td class="textTdcls" align="left"><select id="AddrInputTypeSlc">
+		
+						</select></td>
+		
+					</tr>
+					<tr>
+						<td><div class="labelTdcls">地址:</div></td>
+						<td class="textTdcls" id="addrInputTd" align="left"></td>
+		
+					</tr>
+					<tr>
+						<td align="center" colspan="2" class="singleButtonTdCls"><input
+							type="button" class="btnCls" id="searchAddr" value="检索" /></td>
+					</tr>
+				</table>
+		</div>
+		<!-- >hr width="1022px" class="lineCls" /-->
+	</div>
+</body>
+</html>

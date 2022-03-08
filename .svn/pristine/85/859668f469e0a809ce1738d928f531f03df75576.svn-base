@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="./css/wybCommon.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+
+<script src="./js/jquery-3.6.0.min.js"></script>
+<script src="./js/jquery-ui.js"></script>
+<script src="./js/Common.js"></script>
+<title>员工职责设置</title>
+<style type="text/css">
+<!--
+
+
+
+-->
+</style>
+<script type="text/javascript">
+
+
+var addressUnitSet;
+var addrShowFlg;
+var addrType;
+var os = function (){
+	var ua = navigator.userAgent,
+	isWindowsPhone = /(?:Windows Phone)/.test(ua),
+	isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+	isAndroid = /(?:Android)/.test(ua),
+	isWeixin = /(?:MicroMessenger)/.test(ua),
+	isFireFox = /(?:Firefox)/.test(ua),
+	isChrome = /(?:Chrome|CriOS)/.test(ua),
+	isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+	isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+	isPc = !isPhone && !isAndroid && !isSymbian;
+	return {
+	    isTablet: isTablet,
+	    isPhone: isPhone,
+	    isWeixin:isWeixin,
+	    isAndroid: isAndroid,
+	    isPc: isPc
+	};	
+}();
+
+if (os.isAndroid || os.isPhone || os.isWeixin) { 
+
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPhoneScreen.css">');
+
+    
+    
+} else if (os.isTablet) {
+
+	// 平板
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPadScreen.css">');
+} else if (os.isPc) {
+
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPcScreen.css">');
+}
+
+	
+
+		
+		
+		
+		
+		
+	
+	
+	
+</script>
+</head>
+
+<body>
+<div id="menuContainer"></div>
+	<script>
+		$("#menuContainer").load("menu.html"); 
+	</script>
+		<div id="msgDiv">	
+		</div>
+
+	<div class="container">
+		<form id="myForm" name="myForm">
+
+
+
+			<div class="inputArea pageComment">员工职责设置</div>
+
+			<div class="inputArea ">
+				<table >
+					<tr><td><input type="checkbox" value="1" />物业经理&nbsp;&nbsp;&nbsp;  </td><td><input type="checkbox" value="2" />经理助理&nbsp;&nbsp;&nbsp;   </td></tr>
+					<tr><td><input type="checkbox" value="3" />财务经理&nbsp;&nbsp;&nbsp;   </td><td><input type="checkbox" value="4" />财务助理 &nbsp;&nbsp;&nbsp;  </td></tr>
+					<tr><td><input type="checkbox" value="5" />保安经理&nbsp;&nbsp;&nbsp;   </td><td><input type="checkbox" value="6" />普通保安 &nbsp;&nbsp;&nbsp;  </td></tr>
+					<tr><td><input type="checkbox" value="7" />维修人员&nbsp;&nbsp;&nbsp;    </td><td><input type="checkbox" value="8" />保洁人员&nbsp;&nbsp;&nbsp;   </td></tr>
+				</table>
+			</div>
+	
+			<div class="buttonArea">
+				<table >
+
+					<tr>
+						<td><input type="button" class="btnCls" 
+							id="save" value="保存" /></td>
+						
+
+					</tr>
+
+				</table>
+			</div>
+			<div class="inputArea">
+				
+			</div>
+		
+
+		</form>
+
+
+
+	<div id="footer">	
+		</div>
+		<script>$("#footer").load("foot.html",function() {
+			
+			
+		
+		});</script>
+		</div>
+	
+	
+	
+
+
+	
+</body>
+<script type="text/javascript">
+$("#msgDiv").load("comDialog.html",null,function() {
+	$("#addrInputDiv").dialog("open");
+});
+$(document).ready(function() {
+	init();
+	
+	
+	
+	$("#save").click(function() {
+
+		/*
+				if (inputcheck() == false) {
+					return;
+				}
+				var jsonData = {
+
+				};
+				$.ajax({
+					type : "POST",
+					url : "/saveEmployeeInfo",
+					data : JSON.stringify(jsonData),
+					contentType : "application/json",
+					async : false,
+					success : function(data) {
+						alert("saveEmployeeInfo");
+						//$("#alertDlg p").html(data.MsgContext);
+
+						//$("#alertDlg").dialog("open");
+
+					}
+				})*/
+
+			})
+
+	
+
+		function inputcheck() {
+
+			return true;
+
+		}
+
+		function init() {
+
+		}
+	})
+</script>
+</html>

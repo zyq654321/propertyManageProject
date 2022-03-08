@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+html, body {
+	height: 100%;
+	font-size: 12px;
+}
+
+body {
+	font-family: 宋体;
+	margin: 0;
+}
+
+#container {
+	width: 95%;
+	margin: 0 auto;
+}

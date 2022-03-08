@@ -1,0 +1,16 @@
+package propertyManage.db.repository;
+
+import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
+import propertyManage.db.bean.HumanCommunityRoleBean;
+import propertyManage.db.bean.HumanResourceBean;
+
+/** 
+ *  项目小区人员权限表 Repository 
+ */  
+public interface HumanCommunityRoleRepository extends CrudRepository<HumanCommunityRoleBean,Long>{
+	
+	List<HumanCommunityRoleBean> findByHumanResourceId(Long humanResourceId);
+
+}

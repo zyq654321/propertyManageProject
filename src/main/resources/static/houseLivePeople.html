@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="./css/wybCommon.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+
+<script src="./js/jquery-3.6.0.min.js"></script>
+<script src="./js/jquery-ui.js"></script>
+<script src="./js/Common.js"></script>
+<title>住所居民管理</title>
+<style type="text/css">
+<!--
+
+
+
+-->
+</style>
+<script type="text/javascript">
+var updateFlg;
+var selectedTr;
+var os = function (){
+	var ua = navigator.userAgent,
+	isWindowsPhone = /(?:Windows Phone)/.test(ua),
+	isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+	isAndroid = /(?:Android)/.test(ua),
+	isWeixin = /(?:MicroMessenger)/.test(ua),
+	isFireFox = /(?:Firefox)/.test(ua),
+	isChrome = /(?:Chrome|CriOS)/.test(ua),
+	isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+	isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+	isPc = !isPhone && !isAndroid && !isSymbian;
+	return {
+	    isTablet: isTablet,
+	    isPhone: isPhone,
+	    isWeixin:isWeixin,
+	    isAndroid: isAndroid,
+	    isPc: isPc
+	};	
+}();
+
+if (os.isAndroid || os.isPhone || os.isWeixin) { 
+
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPhoneScreen.css">');
+
+    
+    
+} else if (os.isTablet) {
+
+	// 平板
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPadScreen.css">');
+} else if (os.isPc) {
+
+    document.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPcScreen.css">');
+}
+$(document).ready(function() {
+	init();
+	
+	$("#searchResultTbl").on("click","tr",function() {
+		
+		if ($(this).find("td").length>0) {
+			if (selectedTr !=null && selectedTr.length > 0) {
+				selectedTr.css("background",selectedTrRgb);
+				$("#SelectedHouseLiveIDHdn").val("");				
+			}
+			selectedTr =$(this).find("td");
+			selectedTrRgb=selectedTr.css('background-color');
+			selectedTr.css("background","#8ee6ff");
+			var houseLiveID=$(this).find("input").eq(0).val();
+			$("#SelectedHouseLiveIDHdn").val(houseLiveID);
+			var selectedPeopleName=$(this).find("label").eq(1).html();
+			$("#SelectedPeopleNameHdn").val(selectedPeopleName);
+		}
+	
+	});
+	$("#modifyPeopleBtn").click(function() {
+		updateFlg=3;
+		$("#PeopleIDTxt").val(selectedTr.find(".labelCls").eq(0).html());
+		$('#PeopleNameTxt').val(selectedTr.find(".labelCls").eq(1).html());	
+		$("#GenderSlc").val(selectedTr.find("#GenderHidden").val());
+		$("#PeopleCallTxt").val(selectedTr.find(".labelCls").eq(3).html());
+		$("#RelationshipSlc").val(selectedTr.find("#RelationshipHidden").val());
+		$("#addPeopleDiv").dialog( "open" );
+	})
+	$("#newPeopleBtn").click(function() {
+		updateFlg=2;
+		$("#SelectedHouseLiveIDHdn").val("");	
+		$("#PeopleIDTxt").val("");
+		$('#PeopleNameTxt').val("");	
+		$("#GenderSlc").val(0);
+		$("#PeopleCallTxt").val("");
+		$("#RelationshipSlc").val(0);
+		$("#addPeopleDiv").dialog( "open" );
+	})
+	
+	$("#delHouseLivePeopleBtn").click(function() {
+		$("#confirmDlg p").html("确定要删除居住者"+$("#SelectedPeopleNameHdn").val()+"吗？");
+		
+		$("#confirmDlg").dialog({
+			
+			buttons : {
+				 "确定": function() {
+					$(this).dialog("close");
+					
+					doDelPeople();
+					init();
+				},
+				"取消": function() {
+					$(this).dialog("close");
+					
+				}
+			}
+
+		});
+		$("#confirmDlg").dialog( "open" );
+		
+	})
+	$("#cancel").click(function() {
+		$("#addPeopleDiv").dialog( "close" );
+	})
+
+	
+	
+	$("#savePeople").click(function() {
+		if (inputcheck() == false) {
+			return;
+		}
+		var jsonData={
+				"UpdateFlg":updateFlg,
+				"HouseAccount":$("#HouseAccountHdn").val(),
+				"SelectedHouseLiveID":$("#SelectedHouseLiveIDHdn").val(),
+				"PeopleID" : $("#PeopleIDTxt").val(),
+				"PeopleName":$('#PeopleNameTxt').val().trim(),	
+				"Gender" : $("#GenderSlc").val(),
+				"PeopleCall" : $("#PeopleCallTxt").val(),
+				"Relationship" : $("#RelationshipSlc").val()
+				
+
+		};
+		$.ajax({
+			type : "POST",
+			url : "/saveHouseLivePeople",
+			data: JSON.stringify(jsonData),
+			contentType : "application/json",
+			async : false,
+			success : function(data) {
+				
+			
+				$("#alertDlg p").html(data.MsgContext);
+			
+				$("#alertDlg").dialog( "open" );
+				init();
+				
+
+			}
+		})
+	})
+
+
+})
+
+function doDelPeople() {
+	var jsonData={
+			"SelectedHouseLiveID":$("#SelectedHouseLiveIDHdn").val(),
+			"UpdateFlg":1
+			
+
+	};
+	$.ajax({
+		type : "POST",
+		url : "/saveHouseLivePeople",
+		data: JSON.stringify(jsonData),
+		contentType : "application/json",
+		async : false,
+		success : function(data) {
+			
+				$("#alertDlg p").html(data.MsgContext);
+				$("#alertDlg").dialog( "open" );
+			
+		}
+	})
+}
+function init() {
+	var url=decodeURIComponent(window.location.search);
+	var houseAccount,houseAddr;
+	if (url.indexOf("houseAccountId=") > 0) {
+		houseAccount=url.substr(url.indexOf("houseAccountId=")+15,8);
+	}
+	if (url.indexOf("allAddr=") > 0) {
+		
+		houseAddr=url.substr(url.indexOf("allAddr=")+8);
+	}
+	$("#addrComment").html(houseAddr);
+	
+	$("#HouseAccountHdn").val(houseAccount);
+	searchPeople();
+	
+
+	$("#addPeopleDiv").dialog({
+		autoOpen : false,
+		width : "25em",
+		show : "scale",
+		modal : true,
+		autoOpen : false,
+	});
+	
+	
+}
+
+		
+function searchPeople() {
+	var jsonData={
+			"HouseAccountId":$("#HouseAccountHdn").val()
+			
+
+	};
+	$.ajax({
+		type : "POST",
+		url : "/searchHouseLivePeople",
+		data: JSON.stringify(jsonData),
+		contentType : "application/json",
+		async : false,
+		success : function(data) {
+			if ("NG" ==data.Result) {
+				$("#alertDlg p").html(data.MsgContext);
+				$("#alertDlg").dialog( "open" );
+			}else {
+				addTableRow(data.SEARCH_RESULT);
+		    	$("#searchHouseLivePeopleResultDiv").show();
+			}
+		}
+	})
+}
+
+function addTableRow(data) {
+	$("#searchHouseLivePeopleResultDiv").find(".lineTrCls").remove();
+	for(var i=0;i<data.length;i++) {
+		$("#searchHouseLivePeopleResultDiv").find("tr")
+		.last()
+		.after("<tr class=\"lineTrCls\">" +
+				"<td><label class=\"labelCls\" id=\"peopleID\">"+data[i]["peopleID"]+"</label> <input type=\"hidden\" id=\"HouseLiveIDHidden\" value=\""+data[i]["houseLiveID"]+"\" /> 	</td>"+
+				"<td><label class=\"labelCls\">"+data[i]["peopleName"]+"</label></td>"+
+				"<td><label class=\"labelCls\">"+data[i]["genderName"]+"</label><input type=\"hidden\" id=\"GenderHidden\" value=\""+data[i]["gender"]+"\" /> </td>"+
+				"<td><label class=\"labelCls\">"+data[i]["peopleCall"]+"</label></td>" +
+				"<td><label class=\"labelCls\">"+data[i]["relationshipName"]+"</label><input type=\"hidden\" id=\"RelationshipHidden\" value=\""+data[i]["relationship"]+"\" /> </td>"  +
+				"</tr> ");
+		
+	}
+}
+	
+function inputcheck() {
+	
+	
+	var checkObjArray=[["#PeopleNameTxt","居住人姓名"],["#PeopleIDTxt","居住人身份证"],["#PeopleCallTxt","电话"]];
+
+	
+	var checkTypeArray=[[[1]],[[2,18]],
+		[[2,11],[3]]];
+
+	if (inputCheckCom(checkObjArray,checkTypeArray)==false) {
+		
+		return false;
+	}
+		
+
+
+	
+}		
+		
+	
+	
+	
+</script>
+</head>
+
+<body>
+<div id="menuContainer"></div>
+	<script>
+		$("#menuContainer").load("menu.html"); 
+	</script>
+		<div id="msgDiv">	
+		</div>
+
+	<div class="container">
+		<form id="myForm" name="myForm">
+			<div class="inputArea pageComment">住所居民管理</div>
+			<input type="hidden" id="HouseAccountHdn" />
+			<input type="hidden" id="SelectedHouseLiveIDHdn" />
+			<input type="hidden" id="SelectedPeopleNameHdn" />
+			<div class="inputArea helpComment" id="addrComment"></div>
+			
+				<div class="inputArea" id="searchHouseLivePeopleResultDiv">
+					<table class="searchResultTblCls" id="searchResultTbl">
+						<tr class="trCls">
+							<th>身份证号</th>
+							<th>姓名</th>
+							<th>性别</th>
+							<th>电话</th>
+							<th>户主关系</th>
+
+						</tr>
+					</table>
+				</div>
+
+			<div class="inputArea" id="addPeopleDiv" title="新增居住人">
+				<table >
+					<tr>
+						<td><div class="labelTdcls">居住人姓名:</div></td>
+						<td><input type="text"  class="shortInput" id="PeopleNameTxt" /></td>
+
+					</tr>
+					<tr >
+						<td><div class="labelTdcls">身份证号:</div></td>
+						<td><input type="text"  class="midInput" id="PeopleIDTxt" /></td>
+
+					</tr>
+
+		
+					<tr >
+						<td><div class="labelTdcls">性别:</div></td>
+						<td class="textTdcls" align="left">
+						  <select  id="GenderSlc">
+						     <option value="0">男</option>
+						    <option value="1">女</option>
+						    
+						  </select>
+						</td>
+
+					</tr>
+					<tr >
+						<td><div class="labelTdcls">电话:</div></td>
+						<td><input type="text"  class="midInput" id="PeopleCallTxt" /></td>
+
+					</tr>
+
+					<tr>
+						<td><div class="labelTdcls">户主关系:</div></td>
+						<td class="textTdcls" align="left">
+						  <select  id="RelationshipSlc">
+						  	
+						    <option value="0">夫妻</option>
+						    <option value="1">子女</option>
+						    <option value="2">父母</option>
+						    <option value="3">租赁</option>
+						    <option value="4">亲友</option>
+						    
+						  </select>
+						</td>
+
+					</tr>
+					<tr>
+						<td align="center" colspan="2" class="singleButtonTdCls"><input type="button" class="btnCls" 
+							id="savePeople" value="保存" /><input type="button" class="btnCls" 
+							id="cancel" value="取消" /></td>
+						
+
+					</tr>
+					
+				</table>
+			</div>
+			<div class="buttonArea">
+				<table >
+
+					<tr>
+						<td align="center" colspan="2" class="singleButtonTdCls"><input type="button" class="btnCls" 
+							id="delHouseLivePeopleBtn" value="删除居民" /><input type="button" class="btnCls" 
+							id="modifyPeopleBtn" value="修改信息" /><input type="button" class="btnCls" 
+							id="newPeopleBtn" value="新增居民" /></td>
+						
+
+					</tr>
+
+				</table>
+			</div>
+			
+		
+
+		</form>
+
+
+
+	<div id="footer">	
+		</div>
+		<script>$("#footer").load("foot.html",function() {
+			
+			
+		
+		});</script>
+		</div>
+	
+	
+	
+
+
+	
+</body>
+<script type="text/javascript">
+$("#msgDiv").load("comDialog.html",null,function() {
+	$("#addrInputDiv").dialog("open");
+});
+
+	
+</script>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="./css/wybCommon.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+
+<script src="./js/jquery-3.6.0.min.js"></script>
+<script src="./js/jquery-ui.js"></script>
+<script src="./js/Common.js"></script>
+<title>员工职责设置</title>
+<style type="text/css">
+<!--
+-->
+</style>
+<script type="text/javascript">
+	var addressUnitSet;
+	var addrShowFlg;
+	var addrType;
+	var os = function() {
+		var ua = navigator.userAgent, isWindowsPhone = /(?:Windows Phone)/
+				.test(ua), isSymbian = /(?:SymbianOS)/.test(ua)
+				|| isWindowsPhone, isAndroid = /(?:Android)/.test(ua), isWeixin = /(?:MicroMessenger)/
+				.test(ua), isFireFox = /(?:Firefox)/.test(ua), isChrome = /(?:Chrome|CriOS)/
+				.test(ua), isTablet = /(?:iPad|PlayBook)/.test(ua)
+				|| (isAndroid && !/(?:Mobile)/.test(ua))
+				|| (isFireFox && /(?:Tablet)/.test(ua)), isPhone = /(?:iPhone)/
+				.test(ua)
+				&& !isTablet, isPc = !isPhone && !isAndroid && !isSymbian;
+		return {
+			isTablet : isTablet,
+			isPhone : isPhone,
+			isWeixin : isWeixin,
+			isAndroid : isAndroid,
+			isPc : isPc
+		};
+	}();
+
+	if (os.isAndroid || os.isPhone || os.isWeixin) {
+
+		document
+				.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPhoneScreen.css">');
+
+	} else if (os.isTablet) {
+
+		// 平板
+		document
+				.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPadScreen.css">');
+	} else if (os.isPc) {
+
+		document
+				.write('<LINK rel="stylesheet" type="text/css" href="./css/wybPcScreen.css">');
+	}
+</script>
+</head>
+
+<body>
+	<div id="menuContainer"></div>
+	<script>
+		$("#menuContainer").load("menu.html"); 
+		
+		$(document).ready(function() {
+			init();
+			
+			
+			
+		})
+		function init() {
+			$("#employeeNameInputDlg").dialog({
+   				autoOpen : false,
+   				
+   				width :"13em",
+   				show : "scale",
+   				modal : true,
+   				buttons : {
+   				 "确定": function() {
+   					 if (inputcheck()==false) {
+   						 return;
+   					 }
+   					searchEmployeeName();
+   					$(this).dialog("close");
+   				},
+			"取消": function() {
+					$(this).dialog("close");
+				}
+			
+   			}
+
+   			});
+			$("#employeeResponsibilityDiv").hide();
+			$("#employeeNameInputDlg").dialog( "open" );
+		}
+		
+		function searchEmployeeName() {
+			
+			var jsonData={
+					"EmployeeName":$("#employeeNameTxt").val()
+					
+
+			};
+			$.ajax({
+				type : "POST",
+				url : "/searchEmployeeName",
+				data: JSON.stringify(jsonData),
+				contentType : "application/json",
+				async : false,
+				success : function(data) {
+					if ("NG" ==data.Result) {
+						$("#alertDlg p").html(data.MsgContext);
+						$("#alertDlg").dialog( "open" );
+					}else {
+						setEmployeeComment(data.SEARCH_RESULT[0]);
+						$("#employeeResponsibilityDiv").show();
+						
+					}
+				}
+			})
+			
+		}
+		function setEmployeeComment(data) {
+			
+			$("#employeeName").html(data["allAddr"]);
+			alert(data);
+			
+		}
+		function inputcheck() {
+			
+			
+			var checkObjArray=[["#employeeNameTxt","员工姓名"]];
+
+			
+			var checkTypeArray=[[[1]]];
+
+			if (inputCheckCom(checkObjArray,checkTypeArray)==false) {
+				
+				return false;
+			}
+				
+
+
+			
+		}
+	</script>
+	<div id="msgDiv"></div>
+
+	<div class="container">
+		<form id="myForm" name="myForm">
+
+		<div id="employeeNameInputDlg" title="输入员工姓名" class="inputArea" style="background-color: #e1f7ff;top:1px;">
+		
+		
+						
+					<input type="text" class="midInput" id="employeeNameTxt" maxlength="12" />
+		
+				
+		</div>
+
+			<div class="inputArea pageComment">员工职责设置</div>
+			<div class="inputArea helpComment" id="employeeComment">员工<label id="employeeName"></label>权限如下：</div>
+			<div class="inputArea" id="employeeResponsibilityDiv">
+				<table>
+					<tr>
+						<td><input type="checkbox" value="1" /><label
+							class="chkboxLblcls">物业经理</label></td>
+						<td><input type="checkbox" value="2" /><label
+							class="chkboxLblcls">经理助理</label></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" value="3" /><label
+							class="chkboxLblcls">财务经理</label></td>
+						<td><input type="checkbox" value="4" /><label
+							class="chkboxLblcls">财务助理 </label></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" value="5" /><label
+							class="chkboxLblcls">保安经理</label></td>
+						<td><input type="checkbox" value="6" /><label
+							class="chkboxLblcls">普通保安 </label></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" value="7" /><label
+							class="chkboxLblcls">维修人员</label></td>
+						<td><input type="checkbox" value="8" /><label
+							class="chkboxLblcls">保洁人员</label></td>
+					</tr>
+					<tr>
+						<td align="center"  colspan="2"><input type="button" class="btnCls" id="save"
+							value="保存" /></td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="buttonArea">
+				<table>
+
+
+
+				</table>
+			</div>
+			<div class="inputArea"></div>
+
+
+		</form>
+
+
+
+		<div id="footer"></div>
+		<script>
+			$("#footer").load("foot.html", function() {
+
+			});
+		</script>
+	</div>
+
+
+
+
+
+
+</body>
+<script type="text/javascript">
+	$("#msgDiv").load("comDialog.html", null, function() {
+		$("#addrInputDiv").dialog("open");
+	});
+	$(document).ready(function() {
+		init();
+
+		$("#save").click(function() {
+
+			/*
+					if (inputcheck() == false) {
+						return;
+					}
+					var jsonData = {
+
+					};
+					$.ajax({
+						type : "POST",
+						url : "/saveEmployeeInfo",
+						data : JSON.stringify(jsonData),
+						contentType : "application/json",
+						async : false,
+						success : function(data) {
+							alert("saveEmployeeInfo");
+							//$("#alertDlg p").html(data.MsgContext);
+
+							//$("#alertDlg").dialog("open");
+
+						}
+					})*/
+
+		})
+
+		function inputcheck() {
+
+			return true;
+
+		}
+
+		function init() {
+
+		}
+	})
+</script>
+</html>
